@@ -1,27 +1,24 @@
 import React, { Component } from 'react'
 import AuthService from '../AuthService'
 import Webcam from 'react-webcam'
-//import axios from 'axios'
 import {storage} from '../firebase-config'
-// import {saveJobImage} from '../actions'
-//const API_URL='http://localhost:5000'
-  
-
 
 export default class CustomerImage extends Component {
+
   state = {
     first_name: '',
     last_name: '',
     email: '',
+    picture_one: null,
+    picture_two: null,
     customer_id: this.props.match.params.id,
     message: null,
-    imageData_one: null,
-    imageData_two: null,
+    imageData_one: '',
+    imageData_two: '',
     image_name: 'default',
     saveImage: false,
-    // cloud_image: '',
-    // firebaseImage: ''
   }
+
 
   handleInput = ({ target: input }) => {
     const { name, value } = input;
@@ -33,6 +30,33 @@ export default class CustomerImage extends Component {
 
  setRef=(webcam) => {
     this.webcam=webcam
+  }
+
+  memoryDataOne = id => {
+    let memory=this.state
+    memory.picture_one= id
+    
+    AuthService.modify_customer(memory)
+      .then(({customer}) => {
+        // localStorage.setItem('customerId', customer._id)
+        //this.props.history.push('/thankyou')
+      })
+      .catch(({ response: { data } }) => {
+        this.setState({ message: data.message })
+      })
+    }
+  
+  memoryDataTwo = id => {
+    let memory=this.state
+    memory.picture_two= id
+    AuthService.modify_customer(memory)
+    .then(({customer}) => {
+      // localStorage.setItem('customerId', customer._id)
+      //this.props.history.push('/thankyou')
+    })
+    .catch(({ response: { data } }) => {
+      this.setState({ message: data.message })
+    })
   }
 
 
@@ -52,7 +76,7 @@ capture_one = () => {
 
   handleSaveSubmit=(e)=> {
     e.preventDefault()
-
+   
     function dataURLtoFile(dataurl, filename) {
       var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
           bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
@@ -63,81 +87,105 @@ capture_one = () => {
     }
 
     let img_one = dataURLtoFile(this.state.imageData_one, this.state.image_name + '1.jpg')
+    
+    
     let img_two = dataURLtoFile(this.state.imageData_two, this.state.image_name + '2.jpg')
-    this.uploadImage(img_one)
-    this.uploadImage(img_two)
-
+    this.uploadImage_one(img_one)
+    this.uploadImage_two(img_two)
+    
+    console.log(this.state)
+    
     AuthService.modify_customer(this.state)
       .then(({customer}) => {
         // localStorage.setItem('customerId', customer._id)
         this.props.history.push('/thankyou')
       })
       .catch(({ response: { data } }) => {
-        console.log(data)
         this.setState({ message: data.message })
       })
-  }
-
-
-
-  uploadImage(e) {
-    let imageObj = {}
-      let currentImageName = 'image-'+ this.state.customer_id +'-'+ Date.now()
-      let uploadImage = storage.ref(`images/${currentImageName}`).put(e)
-
-      uploadImage.on('state_changed',
-        (snapshot) => { },
-        (error) => {
-          alert(error)
-        },
-        () => {
-          storage.ref('images').child(currentImageName).getDownloadURL().then(url => {
-
-            this.setState({
-              firebaseImage: url
-            })
-
-            // store image object in the database
-            imageObj = {
-              image_name: currentImageName,
-              image_data: url,
-              customerId: this.state.customer_id
-            }
-
-            AuthService.modify_customer_image(imageObj)
-            //axios.post(`${API_URL}/modify_customer_image`, imageObj)
-              .then((data) => {
-                if (data.data.success) {
-                  alert("Image has been successfully uploaded using firebase storage");
-                }
-              })
-              .catch((err) => {
-                alert("Error while uploading image using firebase storage")
-              })
-          })
-        })
     }
+
+    uploadImage_one(e) {
+      let imageObj = {}
+        let currentImageName = 'image-'+ this.state.customer_id +'-'+ Date.now()
+        let uploadImage = storage.ref(`images/${currentImageName}`).put(e)
   
+        uploadImage.on('state_changed',
+          (snapshot) => { },
+          (error) => {
+            alert(error)
+          },
+          () => {
+            storage.ref('images').child(currentImageName).getDownloadURL().then(url => {
+  
+              this.setState({
+                firebaseImage: url
+              })
+  
+              // store image object in the database
+              imageObj = {
+                image_name: currentImageName,
+                image_data: url,
+                customerId: this.state.customer_id
+              }
+              AuthService.modify_customer_image_one(imageObj)
+              .then((data) => {
+                this.memoryDataOne(data.data._id)
+                  if (data.data.success) {
+                    alert("Image has been successfully uploaded using firebase storage");
+                  }
+                  
+                })
+                .catch((err) => {
+                  alert("Error while uploading image using firebase storage")
+                })
+            })
+          })
+      }
 
-
-  // saveForm=()=> {
-  //   return(
-  //     <div>
-  //       <form onSubmit={this.handleSaveSubmit}>
-  //         <p>
-  //           <label>Image Name: </label>
-  //           <input type="text" name="image_name" value={this.state.image_name} onChange={this.handleChange}/>
-  //           <input type="submit" value="Save"/>
-  //         </p>
-  //       </form>
-  //     </div>
-  //   )
-  // }
-
+      uploadImage_two(e) {
+        let imageObj = {}
+          let currentImageName = 'image-'+ this.state.customer_id +'-'+ Date.now()
+          let uploadImage = storage.ref(`images/${currentImageName}`).put(e)
+    
+          uploadImage.on('state_changed',
+            (snapshot) => { },
+            (error) => {
+              alert(error)
+            },
+            () => {
+              storage.ref('images').child(currentImageName).getDownloadURL().then(url => {
+    
+                this.setState({
+                  firebaseImage: url
+                })
+    
+                // store image object in the database
+                imageObj = {
+                  image_name: currentImageName,
+                  image_data: url,
+                  customerId: this.state.customer_id
+                }
+                AuthService.modify_customer_image_two(imageObj)
+                .then((data) => {
+                  this.memoryDataTwo(data.data._id)
+                    if (data.data.success) {
+                      alert("Image has been successfully uploaded using firebase storage");
+                    }
+                    
+                  })
+                  .catch((err) => {
+                    alert("Error while uploading image using firebase storage")
+                  })
+              })
+            })
+        }
+  
 
   render() {
     const { first_name, last_name, email, message } = this.state
-
+    
+      //Set video settings: Front camera, small picture size
       const videoConstraints = {
         width: 640,
         height: 480,
@@ -156,38 +204,7 @@ capture_one = () => {
         <div className="input-group mb-3">
                 
           {message && <p>{message}</p>}
-
-          <label >
-            First Name
-            <input
-              type="text"
-              name="first_name"
-              value={first_name}
-              onChange={this.handleInput}
-              className="form-control"
-            />
-          </label>
-          <label >
-            Last Name
-            <input
-              type="text"
-              name="last_name"
-              value={last_name}
-              onChange={this.handleInput}
-              className="form-control"
-            />
-          </label>
-          <label >
-            Email
-            <input
-              type="text"
-              name="email"
-              value={email}
-              onChange={this.handleInput}
-              className="form-control"
-            />
-          </label>
-         
+          
           <div className="container">
               <Webcam
                 audio={false}
@@ -216,15 +233,71 @@ capture_one = () => {
                   <p>
                     <img src={this.state.imageData_two} alt=""/>
                   </p>
-                  {/* <span><button onClick={this.onClickRetake_two}>Retake?</button></span> */}
-                  <span><button onClick={this.handleSaveSubmit}>Save</button></span>
-                  {/* {this.state.saveImage ? this.saveForm() : null} */}
+
+          <form >
+                  <div className="form-row">
+          <div className="col-md-4 mb-3">
+          <label htmlFor="first_name">
+            First Name
+            <input
+            id="first_name"
+              type="text"
+              name="first_name"
+              value={first_name}
+              onChange={this.handleInput}
+              className="form-control"
+              required
+            />
+          </label>
+          <label htmlFor="last_name">
+            Last Name
+            <input
+            id="email"
+              type="text"
+              name="last_name"
+              value={last_name}
+              onChange={this.handleInput}
+              className="form-control"
+              required
+            />
+          </label>
+          <label htmlFor="email">
+            Email
+            <input
+            id="email"
+              type="text"
+              name="email"
+              value={email}
+              onChange={this.handleInput}
+              className="form-control"
+              required
+            />
+          </label>
+          <div className="form-group">
+                  <div className="form-check">
+                    <input className="form-check-input" type="checkbox" value="" id="invalidCheck2" required />
+                    <label className="form-check-label" htmlFor="invalidCheck2">
+                    Agree to terms and conditions
+                  </label>
                 </div>
-              : null}
-            
+                </div>
           </div>
+          </div>
+                  
+          
+           </form>      
+
+           <button className="btn btn-primary" onClick={this.handleSaveSubmit} type="submit">Save</button>
+
+
+           </div>
+              : null}
+           
+          </div>
+          
         </div>
         </div>
     )
   }
 }
+

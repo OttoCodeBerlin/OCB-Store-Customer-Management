@@ -41,16 +41,15 @@ router.post('/signup', (req, res, next) => {
 })
 
 router.post('/modify_customer', (req, res, next) => {
-  const { first_name, last_name, email, customer_id } = req.body
-  Customer.findByIdAndUpdate(customer_id, { first_name, last_name, email })
+  const { first_name, last_name, email, customer_id, picture_one, picture_two } = req.body
+  Customer.findByIdAndUpdate(customer_id, { first_name, last_name, email, picture_one, picture_two })
     .then(data => {
       res.status(200).send(data)
     })
     .catch(err => res.status(500).send({ message: err.message }))
 })
 
-router.post('/modify_customer_image', (req, res, next) => {
-  console.log(req.body)
+router.post('/modify_customer_image_one', (req, res, next) => {
   const image = new Image({
     image_name: req.body.image_name,
     image_data: req.body.image_data,
@@ -59,8 +58,29 @@ router.post('/modify_customer_image', (req, res, next) => {
   image
     .save()
     .then(data => {
+      console.log('One:' + req.body.customerId)
+      Customer.findByIdAndUpdate(req.body.customerId, { picture_one: data._id })
       res.status(200).send(data)
     })
+
+    .catch(err => res.status(500).send({ message: err.message }))
+})
+
+router.post('/modify_customer_image_two', (req, res, next) => {
+  const image = new Image({
+    image_name: req.body.image_name,
+    image_data: req.body.image_data,
+    customerId: req.body.customerId
+  })
+  image
+    .save()
+
+    .then(data => {
+      console.log('Two:' + req.body.customerId)
+      Customer.findByIdAndUpdate(req.body.customerId, { picture_two: data._id })
+      res.status(200).send(data)
+    })
+
     .catch(err => res.status(500).send({ message: err.message }))
 })
 
@@ -91,34 +111,14 @@ router.post('/add_customer', isAuth, async (req, res, next) => {
 })
 
 router.post('/delete_customer/:id', isAuth, async (req, res, next) => {
-  console.log(req.body)
-  // const { customer_id } = req.body
-  // Customer.findByIdAndDelete(_id: customer_id)
-  //   .then(data => {
-  //     res.status(200).send(data)
-  //   })
-  //   .catch(err => res.status(500).send({ message: err.message }))
+  console.log(req.params)
+  const { id } = req.params
+  Customer.findByIdAndRemove(id)
+    .then(data => {
+      res.status(200).send(data)
+    })
+    .catch(err => res.status(500).send({ message: err.message }))
 })
-
-
-// router.post('/edit', isAuth, (req, res, next) => {
-//   const { _id: userId } = req.user
-//   const { username, store_location, role } = req.body
-
-//   User.findByIdAndUpdate(
-//     userId,
-//     {
-//       username,
-//       store_location,
-//       role
-//     },
-//     { new: true }
-//   )
-//     .then(user => {
-//       res.status(200).send(user)
-//     })
-//     .catch(err => res.status(500).send({ message: err.message }))
-// })
 
 router.get('/logout', isAuth, (req, res, next) => {
   req.logOut()
@@ -131,12 +131,9 @@ router.get('/loggedin', isAuth, (req, res, next) => {
 
 router.get('/customers', async (req, res, next) => {
   const allCustomers = await Customer.find()
+    .populate('picture_one')
+    .populate('picture_two')
   res.status(200).json({ allCustomers })
-})
-
-router.get('/pictures', async (req, res, next) => {
-  const allPictures = await Image.find()
-  res.status(200).json({ allPictures })
 })
 
 router.get('/confirm/:id', (req, res, next) => {

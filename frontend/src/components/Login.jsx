@@ -36,46 +36,33 @@ export default class Login extends Component {
 
   render() {
     const { username, password, message } = this.state
-return (
+    return (
     <div className="container bg">
       <div className="container">
       <div className="jumbotron">
-  <h1 className="display-4">OCB Store Management Customer Admin System</h1>
-</div>
+        <h1 className="display-4">OCB Store Management Customer Admin System</h1>
+      </div>
         </div>
-        <h1 className="title">Login</h1>
         <form onSubmit={this.handleSubmit}>
-          {message && <p>{message}</p>}
-          <label >
-            Username
-            <input
-              type="text"
-              name="username"
-              value={username}
-              onChange={this.handleInput}
-            />
-          </label>
-          <label>
-            Password
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={this.handleInput}
-            />
-          </label>
-          <button className="button btn-primary" onClick={this.submitForm}>
-            Log in
-          </button>
-          <button type="submit" hidden />
+        <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input type="text" className="form-control" id="username" name="username" value={username}
+              onChange={this.handleInput} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password" >Password</label>
+            <input type="password" className="form-control" id="password" name="password" value={password}
+              onChange={this.handleInput}/>
+          </div>
+          <button type="submit" className="btn btn-primary" onClick={this.submitForm}>Log In</button>
         </form>
-        <p>
+        <p className="mt-5">
           If you don't have an account, please sign up {' '}
           <Link to="/signup">here</Link>.
         </p>
       
          
-      
+      {message && <p>{message}</p>}
         </div>
     )
     
