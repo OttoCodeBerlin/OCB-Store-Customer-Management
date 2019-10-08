@@ -13,7 +13,7 @@ const session = require('express-session')
 const passport = require('./handlers/passport')
 
 mongoose
-  .connect('mongodb://localhost/os-store-customer-management', { useNewUrlParser: true })
+  .connect(process.env.DB, { useNewUrlParser: true })
   .then(x => {
     console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
   })
@@ -75,5 +75,10 @@ app.locals.title = 'OS Store Customer Creation Tool'
 
 app.use('/', require('./routes/index'))
 app.use('/auth', require('./routes/auth'))
+
+app.use((req, res, next) => {
+  // If no routes match, send React HTML
+  res.sendFile(__dirname + '/public/index.html')
+})
 
 module.exports = app
