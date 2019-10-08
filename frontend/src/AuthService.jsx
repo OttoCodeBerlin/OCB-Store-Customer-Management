@@ -44,10 +44,15 @@ class AuthService {
       return service.post(path, body);
     }
 
-    delete_customer = (body,id)=> {
-      console.log(id)
+    delete_customer = (body, id)=> {
       const { service } = this;
       const path = '/auth/delete_customer/'+id;
+      return service.post(path, body);
+    }
+
+    resend_customer = (body, id)=> {
+      const { service } = this;
+      const path = '/auth/resend_customer/'+id;
       return service.post(path, body);
     }
  

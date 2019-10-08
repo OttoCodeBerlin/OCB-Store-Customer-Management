@@ -58,11 +58,9 @@ router.post('/modify_customer_image_one', (req, res, next) => {
   image
     .save()
     .then(data => {
-      console.log('One:' + req.body.customerId)
       Customer.findByIdAndUpdate(req.body.customerId, { picture_one: data._id })
       res.status(200).send(data)
     })
-
     .catch(err => res.status(500).send({ message: err.message }))
 })
 
@@ -74,13 +72,10 @@ router.post('/modify_customer_image_two', (req, res, next) => {
   })
   image
     .save()
-
     .then(data => {
-      console.log('Two:' + req.body.customerId)
       Customer.findByIdAndUpdate(req.body.customerId, { picture_two: data._id })
       res.status(200).send(data)
     })
-
     .catch(err => res.status(500).send({ message: err.message }))
 })
 
@@ -95,9 +90,9 @@ router.post('/add_customer', isAuth, async (req, res, next) => {
     .save()
     .then(data => {
       transporter.sendMail({
-        from: '"Your store via OCB Customer Management System" <mailer@ocbcms.com>',
+        from: '"Sustainable. Fashion. O." <mailer@ocbcms.com>',
         to: customer_email,
-        subject: 'Welcome to your store - Please complete your profile',
+        subject: 'Sustainable. Fashion. O. Welcome to your store - Please complete your profile',
         text:
           'Good Day! You have been added to our Store Loyalty Program. Please click the following personal link to complete your profile: ' +
           req.headers.origin +
@@ -111,13 +106,37 @@ router.post('/add_customer', isAuth, async (req, res, next) => {
 })
 
 router.post('/delete_customer/:id', isAuth, async (req, res, next) => {
-  console.log(req.params)
   const { id } = req.params
   Customer.findByIdAndRemove(id)
     .then(data => {
       res.status(200).send(data)
     })
     .catch(err => res.status(500).send({ message: err.message }))
+})
+
+router.post('/resend_customer/:id', isAuth, async (req, res, next) => {
+  const { id } = req.params
+  const { picture_one, picture_two } = req.body
+  let customer_email
+  Customer.findById(id, 'email').then(data => {
+    customer_email = data.email
+    Customer.findByIdAndUpdate(data._id, { picture_one, picture_two })
+      .then(data => {
+        transporter.sendMail({
+          from: '"Sustainable. Fashion. O." <mailer@ocbcms.com>',
+          to: customer_email,
+          subject: 'Sustainable. Fashion. O. Welcome to your store - We need your support',
+          text:
+            'Good Day! We found out that your profile is incomplete, or your pictures might be not usable for our Customer Rewards program. Please click the following personal link to update your profile: ' +
+            req.headers.origin +
+            '/confirm/' +
+            data._id +
+            '. Thank you so much!'
+        })
+        res.status(200).send(data)
+      })
+      .catch(err => res.status(500).send({ message: err.message }))
+  })
 })
 
 router.get('/logout', isAuth, (req, res, next) => {

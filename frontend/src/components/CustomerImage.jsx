@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import AuthService from '../AuthService'
 import Webcam from 'react-webcam'
 import {storage} from '../firebase-config'
+import NavbarCustomer from './NavbarCustomer'
+import FooterCustomer from './FooterCustomer'
+import logo from '../images/ocb_logo_200x200.png'
 
 export default class CustomerImage extends Component {
 
@@ -92,8 +95,6 @@ capture_one = () => {
     let img_two = dataURLtoFile(this.state.imageData_two, this.state.image_name + '2.jpg')
     this.uploadImage_one(img_one)
     this.uploadImage_two(img_two)
-    
-    console.log(this.state)
     
     AuthService.modify_customer(this.state)
       .then(({customer}) => {
@@ -194,13 +195,14 @@ capture_one = () => {
  
 
     return (
-      <div className="container bg">
-        <div className="container">
-          <div className="jumbotron">
-            <h1 className="display-4">Dear Customer</h1>
-          </div>
-        </div>
-        <h5 className="title">Please complete your information</h5>
+      <div className="container bg-2" >
+        <NavbarCustomer />
+        <div className="container" style={{ position: 'relative'}}>
+          <div className="jumbotron" style={{ marginTop: '120px', position: 'absolute'}}>
+            
+          
+        <h2 className="title" style={{fontFamily: 'Permanent Marker, cursive'}}>DEAR CUSTOMER</h2>
+        <h5 className="title">WE NEED SOME MORE INFORMATION.</h5>
         <div className="input-group mb-3">
                 
           {message && <p>{message}</p>}
@@ -215,13 +217,13 @@ capture_one = () => {
                 videoConstraints={videoConstraints}
               />
               <div className="button-container">
-              <span><button onClick={this.capture_one}>Capture Photo 1</button></span>
-              <span><button onClick={this.capture_two}>Capture Photo 2</button></span>
+              <span><button className="btn btn-secondary m-1" onClick={this.capture_one}>CAPTURE PHOTO 1</button></span>
+              <span><button className="btn btn-secondary m-1" onClick={this.capture_two}>CAPTURE PHOTO 2</button></span>
               </div>
               {this.state.imageData_one ?
                 <div>
                   <p>
-                    <img src={this.state.imageData_one} alt=""/>
+                    <img src={this.state.imageData_one} alt="" className="mt-5" />
                   </p>
                   {/* <span><button onClick={this.onClickRetake_one}>Retake?</button></span>
                   <span><button onClick={this.handleSaveSubmit}>Save</button></span> */}
@@ -238,7 +240,7 @@ capture_one = () => {
                   <div className="form-row">
           <div className="col-md-4 mb-3">
           <label htmlFor="first_name">
-            First Name
+            FIRST NAME
             <input
             id="first_name"
               type="text"
@@ -250,7 +252,7 @@ capture_one = () => {
             />
           </label>
           <label htmlFor="last_name">
-            Last Name
+            LAST NAME
             <input
             id="email"
               type="text"
@@ -262,7 +264,7 @@ capture_one = () => {
             />
           </label>
           <label htmlFor="email">
-            Email
+            EMAIL
             <input
             id="email"
               type="text"
@@ -277,7 +279,7 @@ capture_one = () => {
                   <div className="form-check">
                     <input className="form-check-input" type="checkbox" value="" id="invalidCheck2" required />
                     <label className="form-check-label" htmlFor="invalidCheck2">
-                    Agree to terms and conditions
+                    AGREE TO TERMS AND CONDITIONS
                   </label>
                 </div>
                 </div>
@@ -287,15 +289,19 @@ capture_one = () => {
           
            </form>      
 
-           <button className="btn btn-primary" onClick={this.handleSaveSubmit} type="submit">Save</button>
+           <button className="btn btn-primary" onClick={this.handleSaveSubmit} type="submit">SAVE</button>
 
-
+          <p style={{fontFamily: 'Barlow, sans-serif'}}>Powered By {' '}
+                      <img src={logo} width="80" height="80" alt="" className="d-inline-block pb-1"/>
+                      </p>
            </div>
               : null}
            
           </div>
-          
+          </div>
         </div>
+        </div>
+        <FooterCustomer />
         </div>
     )
   }

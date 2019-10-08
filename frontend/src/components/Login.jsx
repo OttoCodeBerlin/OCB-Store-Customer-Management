@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import AuthService from '../AuthService'
+import Navbar from './Navbar'
+import Footer from './Footer'
 
 export default class Login extends Component {
   state = {
@@ -37,14 +39,12 @@ export default class Login extends Component {
   render() {
     const { username, password, message } = this.state
     return (
-    <div className="container bg">
-      <div className="container">
-      <div className="jumbotron">
-        <h1 className="display-4">OCB Store Management Customer Admin System</h1>
-      </div>
-        </div>
-        <form onSubmit={this.handleSubmit}>
-        <div className="form-group">
+      <div>
+        <Navbar />
+    <div className="container " style={{ position: 'relative'}}>
+      <div className="container" style={{marginTop: '90px', position: 'absolute'}}>
+        <form className="vertical-center" onSubmit={this.handleSubmit} >
+        <div className="form-group vertical-center">
             <label htmlFor="username">Username</label>
             <input type="text" className="form-control" id="username" name="username" value={username}
               onChange={this.handleInput} />
@@ -54,15 +54,18 @@ export default class Login extends Component {
             <input type="password" className="form-control" id="password" name="password" value={password}
               onChange={this.handleInput}/>
           </div>
-          <button type="submit" className="btn btn-primary" onClick={this.submitForm}>Log In</button>
-        </form>
+          <button type="submit" className="btn btn-secondary" onClick={this.submitForm}>Log In</button>
         <p className="mt-5">
           If you don't have an account, please sign up {' '}
           <Link to="/signup">here</Link>.
         </p>
+        </form>
+        </div>
       
          
       {message && <p>{message}</p>}
+        </div>
+        <Footer />
         </div>
     )
     

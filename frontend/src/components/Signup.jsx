@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import AuthService from '../AuthService'
+import Navbar from './Navbar'
+import Footer from './Footer'
 
 export default class Signup extends Component {
   state = {
@@ -39,70 +41,71 @@ export default class Signup extends Component {
     const { username, password, store_location, role, message } = this.state
 
     return (
-      <div className="container bg">
-        
-        <div className="container">
-      <div className="jumbotron">
-  <h1 className="display-4">OCB Store Management Customer Admin System</h1>
-</div>
-        </div>
+      <div>
+        <Navbar />
+        <div className="container " style={{ position: 'relative'}}>
+      <div className="container" style={{marginTop: '90px', position: 'absolute'}}>
+
+      <form className="vertical-center" onSubmit={this.handleSubmit} >
         <h5 className="title">Sign up</h5>
-        <div className="input-group mb-3">
-        <form onSubmit={this.handleSubmit}>
-        
-          {message && <p>{message}</p>}
-          <label >
-            Username
-            <input
-              type="text"
+        <div className="form-group vertical-center">
+            <label htmlFor="username">Username</label>
+            <input type="text"
               name="username"
               value={username}
+              placeholder="Select Username..."
               onChange={this.handleInput}
-              className="form-control"
-            />
-          </label>
-          <label>
-            Password
-            <input
-              type="password"
+              className="form-control" id="username" 
+               />
+        </div>
+        <div className="form-group vertical-center">
+            <label htmlFor="password">Password</label>
+            <input type="password"
               name="password"
+              placeholder="Password..."
               value={password}
               onChange={this.handleInput}
-              className="form-control"
-            />
-          </label>
-          <label>
-            Store Location
-            <input
-              type="text"
-              name="store_location"
-              value={store_location}
-              onChange={this.handleInput}
-              className="form-control"
-            />
-          </label>
-          <label>
-            Role
-            <input
-              type="text"
-              name="role"
-              value={role}
-              onChange={this.handleInput}
-              className="form-control"
-            />
-          </label>
+              className="form-control" id="password" 
+               />
+        </div>
+        <div className="form-group vertical-center">
+            <label htmlFor="store-location">Store Location</label>
+              <select className="custom-select mb-3" id="store_location" name="store_location" value={store_location}
+                onChange={this.handleInput}>
+              <option value='' disabled>Select...</option>
+              <option value='Reforma'>Reforma</option>
+              <option value='Polanco'>Polanco</option>
+              <option value='Condesa'>Condesa</option>
+              <option value='Cuauhtemoc'>Cuauhtemoc</option>
+              <option value='Tacubaya'>Tacubaya</option>
+              <option value='Buenos Aires, Argentina'>Buenos Aires, Argentina</option>
+              <option value='La Habana, Cuba'>La Habana, Cuba</option>
+            </select>
 
-          <button type="submit" hidden />
-          <button className="button btn-primary" onClick={this.submitForm}>
-            Create Account
-          </button>
-      
 
+        </div>
+        <div className="form-group vertical-center">
+            <label htmlFor="role">Role</label>
+            <select className="custom-select mb-3" id="role" name="role" value={role}
+              onChange={this.handleInput}>
+            <option value='' disabled>Select...</option>
+            <option value='Sales Representative'>Sales Representative</option>
+            <option value='Manager'>Manager</option>
+            <option value='Admin'>Admin</option>
+          </select>
+
+        </div>
+          <button  className="btn btn-secondary" onClick={this.submitForm}>Create Account</button>
         </form>
+
         </div>
        
+        
+          {message && <p>{message}</p>}
+        
           
-          
+          </div>
+          <Footer />
         </div>
     )
   }
