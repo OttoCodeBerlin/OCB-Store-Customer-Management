@@ -22,40 +22,37 @@ export default class CustomerImage extends Component {
     saveImage: false,
   }
 
-
+  //Handle Customer data input
   handleInput = ({ target: input }) => {
     const { name, value } = input;
-
     this.setState({
       [name]: value
     })
   }
 
- setRef=(webcam) => {
+  //Set Webcam reference
+  setRef=(webcam) => {
     this.webcam=webcam
   }
 
+  //Write first picture in database
   memoryDataOne = id => {
     let memory=this.state
     memory.picture_one= id
-    
     AuthService.modify_customer(memory)
       .then(({customer}) => {
-        // localStorage.setItem('customerId', customer._id)
-        //this.props.history.push('/thankyou')
       })
       .catch(({ response: { data } }) => {
         this.setState({ message: data.message })
       })
     }
   
+    //Write second picture in database
   memoryDataTwo = id => {
     let memory=this.state
     memory.picture_two= id
     AuthService.modify_customer(memory)
     .then(({customer}) => {
-      // localStorage.setItem('customerId', customer._id)
-      //this.props.history.push('/thankyou')
     })
     .catch(({ response: { data } }) => {
       this.setState({ message: data.message })
@@ -63,13 +60,15 @@ export default class CustomerImage extends Component {
   }
 
 
-capture_one = () => {
+  //Take first shot
+  capture_one = () => {
     const imageSrc=this.webcam.getScreenshot()
     this.setState({
       imageData_one: imageSrc
     })
   }
 
+  //Take second shot
   capture_two = () => {
     const imageSrc=this.webcam.getScreenshot()
     this.setState({
@@ -77,9 +76,11 @@ capture_one = () => {
     })
   }
 
+  //Save all data - call image save methods and write customer information to database
   handleSaveSubmit=(e)=> {
     e.preventDefault()
-   
+
+    //Conversion function to write raw data to image file
     function dataURLtoFile(dataurl, filename) {
       var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
           bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
@@ -90,12 +91,11 @@ capture_one = () => {
     }
 
     let img_one = dataURLtoFile(this.state.imageData_one, this.state.image_name + '1.jpg')
-    
-    
     let img_two = dataURLtoFile(this.state.imageData_two, this.state.image_name + '2.jpg')
     this.uploadImage_one(img_one)
     this.uploadImage_two(img_two)
     
+    //Customer information change handler
     AuthService.modify_customer(this.state)
       .then(({customer}) => {
         // localStorage.setItem('customerId', customer._id)
@@ -106,6 +106,7 @@ capture_one = () => {
       })
     }
 
+    //Upload image one
     uploadImage_one(e) {
       let imageObj = {}
         let currentImageName = 'image-'+ this.state.customer_id +'-'+ Date.now()
@@ -131,11 +132,7 @@ capture_one = () => {
               }
               AuthService.modify_customer_image_one(imageObj)
               .then((data) => {
-                this.memoryDataOne(data.data._id)
-                  if (data.data.success) {
-                    alert("Image has been successfully uploaded using firebase storage");
-                  }
-                  
+                this.memoryDataOne(data.data._id)                  
                 })
                 .catch((err) => {
                   alert("Error while uploading image using firebase storage")
@@ -144,6 +141,7 @@ capture_one = () => {
           })
       }
 
+      //Upload image 2
       uploadImage_two(e) {
         let imageObj = {}
           let currentImageName = 'image-'+ this.state.customer_id +'-'+ Date.now()
@@ -156,7 +154,6 @@ capture_one = () => {
             },
             () => {
               storage.ref('images').child(currentImageName).getDownloadURL().then(url => {
-    
                 this.setState({
                   firebaseImage: url
                 })
@@ -169,11 +166,7 @@ capture_one = () => {
                 }
                 AuthService.modify_customer_image_two(imageObj)
                 .then((data) => {
-                  this.memoryDataTwo(data.data._id)
-                    if (data.data.success) {
-                      alert("Image has been successfully uploaded using firebase storage");
-                    }
-                    
+                  this.memoryDataTwo(data.data._id)                   
                   })
                   .catch((err) => {
                     alert("Error while uploading image using firebase storage")
@@ -182,7 +175,7 @@ capture_one = () => {
             })
         }
   
-
+        //RENDER PAGE
   render() {
     const { first_name, last_name, email, message } = this.state
     
@@ -193,20 +186,19 @@ capture_one = () => {
         facingMode: "user"
       }
  
-
     return (
       <div className="container bg-2" >
         <NavbarCustomer />
-        <div className="container" style={{ position: 'relative'}}>
-          <div className="jumbotron" style={{ marginTop: '120px', position: 'absolute'}}>
-            
+        {/* Header */}
+        <div className="container mt-5" >
+          <div className="jumbotron mt-5" >
+            <div className="container">
+            <h2 className="title" style={{fontFamily: 'Permanent Marker, cursive'}}>DEAR CUSTOMER</h2>
+            <h5 className="title">WE NEED SOME MORE INFORMATION.</h5>
+            </div>
+            <div className="input-group mb-3">
           
-        <h2 className="title" style={{fontFamily: 'Permanent Marker, cursive'}}>DEAR CUSTOMER</h2>
-        <h5 className="title">WE NEED SOME MORE INFORMATION.</h5>
-        <div className="input-group mb-3">
-                
-          {message && <p>{message}</p>}
-          
+          {/* Camera image */}
           <div className="container">
               <Webcam
                 audio={false}
@@ -215,27 +207,25 @@ capture_one = () => {
                 screenshotFormat="image/jpeg"
                 width={320}
                 videoConstraints={videoConstraints}
-              />
+              className="rounded float-left" style={{border: '1px solid #6C757D'}}/>
               <div className="button-container">
               <span><button className="btn btn-secondary m-1" onClick={this.capture_one}>CAPTURE PHOTO 1</button></span>
               <span><button className="btn btn-secondary m-1" onClick={this.capture_two}>CAPTURE PHOTO 2</button></span>
               </div>
+              {/* Show image one after it was created */}
               {this.state.imageData_one ?
                 <div>
                   <p>
                     <img src={this.state.imageData_one} alt="" className="mt-5" />
                   </p>
-                  {/* <span><button onClick={this.onClickRetake_one}>Retake?</button></span>
-                  <span><button onClick={this.handleSaveSubmit}>Save</button></span> */}
-                  {/* {this.state.saveImage ? this.saveForm() : null} */}
-                </div>
+                  </div>
               : null}
+              {/* Show image two and input fields and submit button after second pic was created */}
               {this.state.imageData_two ?
                 <div>
                   <p>
                     <img src={this.state.imageData_two} alt=""/>
                   </p>
-
           <form >
                   <div className="form-row">
           <div className="col-md-4 mb-3">
@@ -283,14 +273,11 @@ capture_one = () => {
                   </label>
                 </div>
                 </div>
+                {message && <p>{message}</p>} 
           </div>
           </div>
-                  
-          
            </form>      
-
-           <button className="btn btn-primary" onClick={this.handleSaveSubmit} type="submit">SAVE</button>
-
+           <button className="btn btn-secondary" onClick={this.handleSaveSubmit} type="submit">SAVE</button>
           <p style={{fontFamily: 'Barlow, sans-serif'}}>Powered By {' '}
                       <img src={logo} width="80" height="80" alt="" className="d-inline-block pb-1"/>
                       </p>

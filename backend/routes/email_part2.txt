@@ -1,5 +1,5 @@
 
-`'><span style="color:#212020">Click here to complete your Profile now</span></a>
+' style="text-decoration: none"><span style="color:#212020">Click here to complete your Profile now</span></a>
               
 </p>
 </td>
@@ -90,4 +90,4 @@ style="font-family:Arial, sans-serif;font-size:13px;line-height:22px;text-align:
 </div>
 
 </body>
-</html>`
+</html>

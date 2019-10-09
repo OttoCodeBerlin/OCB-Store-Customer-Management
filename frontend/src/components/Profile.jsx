@@ -25,13 +25,12 @@ export default class Profile extends Component {
     }
   
     this.deleteCustomer=this.deleteCustomer.bind(this)
-    // this.toggleDelete=this.toggleDelete.bind(this)
   }
 
   
 
   
-
+//Lifecycle method 1
   componentDidMount() {
     this.getCustomerDataFromDb()
     AuthService.loggedin()
@@ -43,12 +42,14 @@ export default class Profile extends Component {
       })
   }
 
+  //Lifecycle Method 2
   componentDidUpdate(prevProps) {
      const {match: {params: {value}}}=this.props
     if (prevProps.match.params.value !== value) {
     }
   }
 
+  //Get customers from database
   getCustomerDataFromDb=()=> {
     fetch(process.env.REACT_APP_API_URL + '/auth/customers')
     // fetch('http://localhost:5000/auth/customers')
@@ -56,6 +57,7 @@ export default class Profile extends Component {
     .then((res)=> this.setState({customers: res.allCustomers}))
   }
 
+  //Delete a customer in database and update view
   deleteCustomer = (id, e) => {
     e.preventDefault()
     AuthService.delete_customer(this.state, id)
@@ -70,6 +72,7 @@ export default class Profile extends Component {
       })
   }
 
+  //Send reminder email to customer
   resendCustomer = (id, e) => {
     e.preventDefault()
     AuthService.resend_customer(this.state, id)
@@ -84,6 +87,7 @@ export default class Profile extends Component {
       })
   }
 
+  //Input change handler for customer email input
   handleInput = ({ target: input }) => {
     const { value } = input;
     this.setState({
@@ -91,13 +95,13 @@ export default class Profile extends Component {
     })
   }
 
+  //Submit handler for customer email input
   handleSubmit = e => {
     if (e) e.preventDefault()
     AuthService.add_customer(this.state)
       .then(({user, customer_email}) => {
         alert('Added')
         this.resetForm()
-        // localStorage.setItem('userId', user._id)
         this.props.history.push('/profile')
       })
       .catch(({ response: { data } }) => {
@@ -105,36 +109,42 @@ export default class Profile extends Component {
       })
   }
 
+  //Form Submit handler for customer email
   submitForm = () => {
     this.handleSubmit()
   }
 
+  //Reset customer email after submission
   resetForm = () => {
     this.setState({customer_email: ''})
-}
+  }
 
+  //Auth logout method
   handleLogout = () => {
     AuthService.logout()
     this.props.history.push('/')
   }
 
+  //View handler for Add Customer tab
   click_addcustomer = () => {
     this.setState(prevState => ({ is_addcustomer_visible: true, is_customerlist_visible: false, is_useraccount_visible: false }))
   }
 
+  //View handler for Customer List tab
   click_customerlist = () => {
     this.setState(prevState => ({ is_addcustomer_visible: false, is_customerlist_visible: true, is_useraccount_visible: false }))
   }
 
+  //View handler for User Account tab
   click_useraccount = () => {
     this.setState(prevState => ({ is_addcustomer_visible: false, is_customerlist_visible: false, is_useraccount_visible: true }))
   }
 
+  //Filter method for customer list
   filterCustomers = (e) => { 
     this.state.no_search_value && this.state.filtered_customers.length===0 ? this.setState({is_search_unsuccessful: true}) : this.setState({is_search_unsuccessful: false})
     const {value} = e.target 
     value.length>0 ? this.setState({no_search_value: true}) : this.setState({no_search_value: false})
-    
     const {customers} = this.state 
     const query = value.toLowerCase()
     const filtered_customers=customers.filter(customer => {
@@ -143,11 +153,10 @@ export default class Profile extends Component {
       } 
       return null
     })
-    
     this.setState({filtered_customers})
   }
 
-
+  //RENDER VIEW
   render() {
     let customer_group
     const { user, message, customer_email} = this.state
@@ -189,14 +198,12 @@ export default class Profile extends Component {
           <button className="btn btn-danger btn-sm m-2" type="button" onClick={(e) => {if(window.confirm('You are going to delete the customer data. Are you sure?')){this.deleteCustomer(customer._id, e)};}}>Delete</button>
           <button className="btn btn-warning btn-sm m-2" type="button" onClick={(e) => {if(window.confirm('You are going to send an email to the customer to request new data. Are you sure?')){this.resendCustomer(customer._id, e)};}}>Resend</button>
         </td>
-
-    {/* <td className="align-middle"><button className="btn btn-danger btn-sm" type="button" onClick={this.deleteCustomer.bind(this, customer._id)}>Delete</button></td> */}
       </tr>  
 
  ))
     } 
 
-
+    //Message if login is not valid
     if (!user) return <p>{message}</p>
 
     return (
@@ -223,15 +230,14 @@ export default class Profile extends Component {
 
         {/* ADD CUSTOMER */}
         <div className={`card-body ${(this.state.is_useraccount_visible || this.state.is_customerlist_visible) ? ' d-none' : ' d-block' }`}>
-          <h5 className="card-title">Add Customer by Email</h5>
+          <h4 className="card-title mt-2 mb-3">Add Customer by Email</h4>
           <div className="container">
           <form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label></label>
-              <input type="email" className="form-control" id="customer_email" placeholder="name@example.com" name="customer_email" value={customer_email} onChange={this.handleInput}/>
+          <div className="input-group input-group lg">
+              <input type="email" className="form-control" id="customer_email" placeholder="name@example.com" name="customer_email" style={{height: '55px', fontSize: '1.5rem'}} value={customer_email} onChange={this.handleInput}/>
           </div>
-            <button type="submit" className="btn btn-primary">
-              ADD
+            <button type="submit" className="btn btn-secondary btn-lg mt-3">
+              ADD CUSTOMER
             </button>
           </form>
         </div>
@@ -243,7 +249,6 @@ export default class Profile extends Component {
             <input type="text" className="form-control mb-3" placeholder="Filter Customers by Last Name..." onChange={this.filterCustomers}/>
             </div>
             <div className="container">
-              
             </div>
             <table className="table table-striped">
               <thead>
@@ -269,13 +274,15 @@ export default class Profile extends Component {
           User Information
         </div>
         <ul className="list-group list-group-flush">
-          <li className="list-group-item"><img src={logo_sco} alt="Logo" style={{width: '400px', height: 'auto'}}/></li>
-          <li className="list-group-item text-left">Username: <b>{user.username}</b></li>
-          <li className="list-group-item text-left">Store Location: <b>{user.store_location}</b></li>
-          <li className="list-group-item text-left">Role: <b>{user.role}</b></li>
+          <div className="container" style={{width: '300px', padding: '0'}}>
+            <li className="list-group-item" style={{padding: '10px 3px'}}><img src={logo_sco} alt="Logo" style={{maxWidth: '100%', maxHeight: '100%', padding: '0', margin: '0'}}/></li>
+          </div>
+          <li className="list-group-item text-center">Username: <b>{user.username}</b></li>
+          <li className="list-group-item text-center">Store Location: <b>{user.store_location}</b></li>
+          <li className="list-group-item text-center">Role: <b>{user.role}</b></li>
         </ul>
       </div>
-      <button className="btn btn-primary mt-3" onClick={this.handleLogout}>
+      <button className="btn btn-secondary mt-3" onClick={this.handleLogout}>
             Logout
           </button>
         </div>

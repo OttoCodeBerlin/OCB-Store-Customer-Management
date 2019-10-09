@@ -5,15 +5,18 @@ const Customer = require('../models/Customer')
 const Image = require('../models/Image')
 const { isAuth } = require('../handlers/middleware')
 const nodemailer = require('nodemailer')
-const email_part1 = require('../public/email_part1.txt')
-const email_part2 = require('../public/email_part2.txt')
+const fs = require('fs')
+
+const email_part1 = fs.readFileSync(__dirname + '/email_part1.txt').toString()
+const email_part2 = fs.readFileSync(__dirname + '/email_part2.txt').toString()
 
 const router = express.Router()
 
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user) => {
-    if (err) return res.status(403).send({ message: err })
-    if (!user) return res.status(404).send({ message: 'This user does not exist.' })
+    console.log(user)
+    //if (err) return res.status(403).send({ message: err })
+    if (!user) return res.status(404).send({ message: 'This user does not exist, or the password is incorrect.' })
     req.logIn(user, err => {
       if (err) return res.status(500).send({ message: err.message })
       res.status(200).send(user)
@@ -93,7 +96,8 @@ router.post('/add_customer', isAuth, async (req, res, next) => {
         from: '"Sustainable. Fashion. O." <mailer@ocbcms.com>',
         to: customer_email,
         subject: 'Sustainable. Fashion. O. Welcome to your store - Please complete your profile',
-        text: email_part1 + req.headers.origin + '/confirm/' + data._id + email_part2
+        //text: email_part1 + req.headers.origin + '/confirm/' + data._id + email_part2,
+        html: email_part1 + req.headers.origin + '/confirm/' + data._id + email_part2
       })
       res.status(200).send(data)
     })

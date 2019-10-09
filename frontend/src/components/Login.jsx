@@ -55,6 +55,10 @@ export default class Login extends Component {
               onChange={this.handleInput}/>
           </div>
           <button type="submit" className="btn btn-secondary" onClick={this.submitForm}>Log In</button>
+        <div className="mt-3">
+          {message && <p>{message}</p>}
+        </div>
+        
         <p className="mt-5">
           If you don't have an account, please sign up {' '}
           <Link to="/signup">here</Link>.
@@ -62,8 +66,6 @@ export default class Login extends Component {
         </form>
         </div>
       
-         
-      {message && <p>{message}</p>}
         </div>
         <Footer />
         </div>

@@ -17,23 +17,3 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
 }
-
-.cards-button-active {
-  cursor: 'pointer';
-  color: '#495057';
-  border-top-left-radius: '.25rem';
-  border-top-right-radius: '.25rem';
-  border-color: '#dee2e6, #dee2e6, #fff';
-  background-color: '#FFFFFF';
-}
-
-.cards-button-inactive {
-  cursor: 'pointer';
-  color: 'red';
-  border-top-left-radius: '.25rem';
-  border-top-right-radius: '.25rem';
-  border-color: '#dee2e6, #dee2e6, #fff';
-  background-color: 'transparent';
-  border: '1px solid transparent';
-  
-}

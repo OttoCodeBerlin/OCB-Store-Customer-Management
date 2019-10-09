@@ -1,5 +1,5 @@
 
-    `<!doctype html>
+    <!doctype html>
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
       <head>
         <title>
@@ -107,10 +107,10 @@
       >
         <tbody>
           <tr>
-            <td  style="width:180px;">
+            <td  style="width:400px;">
               
       <img
-         height="auto" src="https://firebasestorage.googleapis.com/v0/b/ocb-store-management.appspot.com/o/email_pics%2Fsustainable_fashion_o_logo.jpg?alt=media&token=c806fb6b-fa71-4513-a54f-66ea3000a500" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" title="" width="180"
+         height="auto" src="https://firebasestorage.googleapis.com/v0/b/ocb-store-management.appspot.com/o/email_pics%2Fsustainable_fashion_o_large.jpg?alt=media&token=c2e024d6-660a-455f-b7e1-9568e7a61657" style="border:none;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" title="" width="300"
       />
     
             </td>
@@ -292,4 +292,4 @@
             <p
                style="display:inline-block;background:#dee2e6;color:#ffffff;font-family:Helvetica, Arial, sans-serif;font-size:18px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:3px;"
             >
-            <a href='`
+            <a href='
