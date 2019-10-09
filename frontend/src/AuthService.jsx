@@ -75,6 +75,6 @@ class AuthService {
   }
 }
 
-const auth = new AuthService('http://localhost:5000');
+const auth = new AuthService(process.env.REACT_APP_API_URL);
 
 export default auth;

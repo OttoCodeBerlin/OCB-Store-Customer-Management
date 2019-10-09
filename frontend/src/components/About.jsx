@@ -43,7 +43,7 @@ export default class About extends Component {
         </li>
         <li className="list-group-item">Photo by <a href="https://unsplash.com/@christiannkoepke?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"  target="_blank" rel="noopener noreferrer"> Christiann Koepke </a> on <a href="https://unsplash.com/s/photos/store?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"  target="_blank" rel="noopener noreferrer">Unsplash</a>
         </li>
-        <li className="list-group-item">Logo by <a href="http://freelogodesign.org" target="_blank" rel="noopener noreferrer">freelogodesign.org</a></li>
+        <li className="list-group-item">Logos by <a href="http://freelogodesign.org" target="_blank" rel="noopener noreferrer">freelogodesign.org</a></li>
         <button className="btn btn-primary mt-2" onClick={this.handleBack}>Back</button>
       </ul>
       

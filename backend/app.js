@@ -36,12 +36,7 @@ app.use(
 app.use(passport.initialize())
 app.use(passport.session())
 
-// app.use(
-//   cors({
-//     credentials: true,
-//     origin: [process.env.FRONTENDPOINT]
-//   })
-// )
+//CORS config for local build
 app.use(
   cors({
     credentials: true,

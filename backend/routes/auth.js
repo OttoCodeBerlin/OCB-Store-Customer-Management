@@ -5,6 +5,8 @@ const Customer = require('../models/Customer')
 const Image = require('../models/Image')
 const { isAuth } = require('../handlers/middleware')
 const nodemailer = require('nodemailer')
+const email_part1 = require('../public/email_part1.txt')
+const email_part2 = require('../public/email_part2.txt')
 
 const router = express.Router()
 
@@ -12,10 +14,8 @@ router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user) => {
     if (err) return res.status(403).send({ message: err })
     if (!user) return res.status(404).send({ message: 'This user does not exist.' })
-
     req.logIn(user, err => {
       if (err) return res.status(500).send({ message: err.message })
-
       res.status(200).send(user)
     })
   })(req, res, next)
@@ -93,12 +93,7 @@ router.post('/add_customer', isAuth, async (req, res, next) => {
         from: '"Sustainable. Fashion. O." <mailer@ocbcms.com>',
         to: customer_email,
         subject: 'Sustainable. Fashion. O. Welcome to your store - Please complete your profile',
-        text:
-          'Good Day! You have been added to our Store Loyalty Program. Please click the following personal link to complete your profile: ' +
-          req.headers.origin +
-          '/confirm/' +
-          data._id +
-          '. Thank you!'
+        text: email_part1 + req.headers.origin + '/confirm/' + data._id + email_part2
       })
       res.status(200).send(data)
     })
@@ -156,8 +151,6 @@ router.get('/customers', async (req, res, next) => {
 })
 
 router.get('/confirm/:id', (req, res, next) => {
-  console.log(req.params)
-  console.log(req.user)
   res.status(200).send()
 })
 

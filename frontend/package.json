@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/core": "^7.6.2",
+    "dotenv": "^8.1.0",
     "env-cmd": "^10.0.1",
     "firebase": "^7.0.0",
     "react": "^16.10.0",
@@ -12,8 +13,10 @@
     "react-webcam": "^3.1.1"
   },
   "scripts": {
-    "start": "env-cmd react-scripts start",
-    "build": "env-cmd react-scripts build",
+    "start": " env-cmd -f ./development.env react-scripts start",
+    "build-dev": "dotenv -e development.env react-scripts build",
+    "build-prod": "dotenv -e production.env react-scripts build",
+    "build": "env-cmd -f ./production.env react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

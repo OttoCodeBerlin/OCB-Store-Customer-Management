@@ -50,7 +50,8 @@ export default class Profile extends Component {
   }
 
   getCustomerDataFromDb=()=> {
-    fetch('http://localhost:5000/auth/customers')
+    fetch(process.env.REACT_APP_API_URL + '/auth/customers')
+    // fetch('http://localhost:5000/auth/customers')
     .then((data)=> data.json())
     .then((res)=> this.setState({customers: res.allCustomers}))
   }
@@ -59,7 +60,7 @@ export default class Profile extends Component {
     e.preventDefault()
     AuthService.delete_customer(this.state, id)
       .then(response => {
-        fetch('http://localhost:5000/auth/customers')
+        fetch(process.env.REACT_APP_API_URL + '/auth/customers')
         .then((data)=> data.json())
         .then((res)=> this.setState({customers: res.allCustomers}))
         this.props.history.push('/profile')
@@ -73,7 +74,7 @@ export default class Profile extends Component {
     e.preventDefault()
     AuthService.resend_customer(this.state, id)
       .then(response => {
-        fetch('http://localhost:5000/auth/customers')
+        fetch(process.env.REACT_APP_API_URL + '/auth/customers')
         .then((data)=> data.json())
         .then((res)=> this.setState({customers: res.allCustomers}))
         this.props.history.push('/profile')
@@ -157,11 +158,11 @@ export default class Profile extends Component {
     let customers
     if (customer_group.length===0) { //If search has no results show warning
       customers = (
-        <div className="container mt-5 ml-5">
-          <div className="alert alert-danger" role="alert" >
-          Sorry, no customers found matching the search criteria.
-        </div>
-        </div>
+        // <div className="container mt-5 ml-5">
+        //   <div className="alert alert-danger" role="alert" >
+          <tr><th>Sorry, no entries found matching your criteria.</th></tr>
+        // </div>
+        //</div> 
         )
       
     } else {
@@ -172,10 +173,11 @@ export default class Profile extends Component {
         <td className="align-middle p-0"><small>{customer.email}</small></td>
 
         {customer.picture_one ?   //If customer pictures exist, show them with links to large view
-         <td className="align-middle p-0"> <a style={{cursor: 'pointer'}}  onClick={()=>{ window.open(customer.picture_one.image_data, "Popup","toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=1, resizable=0, width=700, height=500, top=30") }}>
+         <td className="align-middle p-0"> 
+         <a href="/#" style={{cursor: 'pointer'}}  onClick={()=>{ window.open(customer.picture_one.image_data, "Popup","toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=1, resizable=0, width=700, height=500, top=30") }}>
          <img src={customer.picture_one.image_data} style={{ height: '30%', width: 'auto', margin: '5px' }} alt=""/>
          </a>
-         <a style={{cursor: 'pointer'}}  onClick={()=>{ window.open(customer.picture_two.image_data, "Popup","toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=1, resizable=0, width=700, height=500, top=30") }}>
+         <a href="/#" style={{cursor: 'pointer'}}  onClick={()=>{ window.open(customer.picture_two.image_data, "Popup","toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=1, resizable=0, width=700, height=500, top=30") }}>
          <img src={customer.picture_two.image_data} style={{ height: '30%', width: 'auto' , margin: '5px'  }} alt=""/>
          </a>
          </td>
@@ -208,13 +210,13 @@ export default class Profile extends Component {
         <div className="card-header">
           <ul className="nav nav-tabs card-header-tabs">
             <li className="nav-item">
-              <a className={`nav-link ${this.state.is_addcustomer_visible ? ' active' : ' ' }`} onClick={this.click_addcustomer} style={{cursor: 'pointer'}}>Add Customers</a>
+              <button className={` ${this.state.is_addcustomer_visible ? ' nav-link active cards-button-active' : ' nav-link cards-button-inactive' }`} onClick={this.click_addcustomer} style={{outline: 'none'}}>Add Customers</button>
             </li>
             <li className="nav-item">
-              <a className={`nav-link ${this.state.is_customerlist_visible ? ' active' : ' ' }`} onClick={this.click_customerlist} style={{cursor: 'pointer'}}>Customer List</a>
+              <button className={` ${this.state.is_customerlist_visible ? ' nav-link active cards-button-active' : ' nav-link cards-button-inactive' }`} onClick={this.click_customerlist} style={{outline: 'none'}}>Customer List</button>
             </li>
             <li className="nav-item">
-              <a className={`nav-link ${this.state.is_useraccount_visible ? ' active' : ' ' }`} onClick={this.click_useraccount} style={{cursor: 'pointer'}}>User Account</a>
+              <button className={` ${this.state.is_useraccount_visible ? ' nav-link active cards-button-active' : ' nav-link cards-button-inactive' }`} onClick={this.click_useraccount} style={{outline: 'none'}}>User Account</button>            
             </li>
           </ul>
         </div>

@@ -3,17 +3,37 @@ body {
 }
 
 .bg {
-  background-image: url("./images/blake-wisz-tE6th1h6Bfk-unsplash.jpg");
+  background-image: url('./images/blake-wisz-tE6th1h6Bfk-unsplash.jpg');
   height: 100vh;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  }
+}
 
-  .bg-2 {
-    background-image: url("./images/christiann-koepke-dQyS2pMYtok-unsplash.jpg");
-    height: 100vh;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    }
+.bg-2 {
+  background-image: url('./images/christiann-koepke-dQyS2pMYtok-unsplash.jpg');
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.cards-button-active {
+  cursor: 'pointer';
+  color: '#495057';
+  border-top-left-radius: '.25rem';
+  border-top-right-radius: '.25rem';
+  border-color: '#dee2e6, #dee2e6, #fff';
+  background-color: '#FFFFFF';
+}
+
+.cards-button-inactive {
+  cursor: 'pointer';
+  color: 'red';
+  border-top-left-radius: '.25rem';
+  border-top-right-radius: '.25rem';
+  border-color: '#dee2e6, #dee2e6, #fff';
+  background-color: 'transparent';
+  border: '1px solid transparent';
+  
+}
