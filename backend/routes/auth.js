@@ -9,6 +9,8 @@ const fs = require('fs')
 
 const email_part1 = fs.readFileSync(__dirname + '/email_part1.txt').toString()
 const email_part2 = fs.readFileSync(__dirname + '/email_part2.txt').toString()
+const resend_email_part1 = fs.readFileSync(__dirname + '/resend_email_part1.txt').toString()
+const resend_email_part2 = fs.readFileSync(__dirname + '/resend_email_part2.txt').toString()
 
 const router = express.Router()
 
@@ -125,12 +127,13 @@ router.post('/resend_customer/:id', isAuth, async (req, res, next) => {
           from: '"Sustainable. Fashion. O." <mailer@ocbcms.com>',
           to: customer_email,
           subject: 'Sustainable. Fashion. O. Welcome to your store - We need your support',
-          text:
-            'Good Day! We found out that your profile is incomplete, or your pictures might be not usable for our Customer Rewards program. Please click the following personal link to update your profile: ' +
-            req.headers.origin +
-            '/confirm/' +
-            data._id +
-            '. Thank you so much!'
+          // text:
+          //   'Good Day! We found out that your profile is incomplete, or your pictures might be not usable for our Customer Rewards program. Please click the following personal link to update your profile: ' +
+          //   req.headers.origin +
+          //   '/confirm/' +
+          //   data._id +
+          //   '. Thank you so much!'
+          html: resend_email_part1 + req.headers.origin + '/confirm/' + data._id + resend_email_part2
         })
         res.status(200).send(data)
       })

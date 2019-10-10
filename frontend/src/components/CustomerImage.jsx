@@ -4,10 +4,10 @@ import Webcam from 'react-webcam'
 import {storage} from '../firebase-config'
 import NavbarCustomer from './NavbarCustomer'
 import FooterCustomer from './FooterCustomer'
+import MediaQuery from 'react-responsive'
 import logo from '../images/ocb_logo_200x200.png'
 
 export default class CustomerImage extends Component {
-
   state = {
     first_name: '',
     last_name: '',
@@ -95,15 +95,16 @@ export default class CustomerImage extends Component {
     this.uploadImage_one(img_one)
     this.uploadImage_two(img_two)
     
+    
     //Customer information change handler
-    AuthService.modify_customer(this.state)
+    setTimeout(() => AuthService.modify_customer(this.state)
       .then(({customer}) => {
         // localStorage.setItem('customerId', customer._id)
         this.props.history.push('/thankyou')
       })
       .catch(({ response: { data } }) => {
         this.setState({ message: data.message })
-      })
+      }), 1000)
     }
 
     //Upload image one
@@ -175,7 +176,7 @@ export default class CustomerImage extends Component {
             })
         }
   
-        //RENDER PAGE
+  //RENDER PAGE
   render() {
     const { first_name, last_name, email, message } = this.state
     
@@ -191,46 +192,56 @@ export default class CustomerImage extends Component {
         <NavbarCustomer />
         {/* Header */}
         <div className="container mt-5" >
-          <div className="jumbotron mt-5" >
-            <div className="container">
+          {/* View for large devices - Desktop */}
+        <MediaQuery minDeviceWidth={1024}>
+          <div className="jumbotron" style={{opacity: '0.9', marginLeft: '15vw', marginRight: '15vw'}}>
+            <div className="container" style={{textAlign: 'center'}}>
             <h2 className="title" style={{fontFamily: 'Permanent Marker, cursive'}}>DEAR CUSTOMER</h2>
             <h5 className="title">WE NEED SOME MORE INFORMATION.</h5>
+            <h5 className="title">LET'S START WITH TWO PHOTOS.</h5>
             </div>
-            <div className="input-group mb-3">
-          
+            <div className="container" style={{textAlign: 'center'}}>
+              <button className="btn btn-secondary m-1" onClick={this.capture_one}>CAPTURE PHOTO 1</button>
+              <button className="btn btn-secondary m-1" onClick={this.capture_two}>CAPTURE PHOTO 2</button>
+          </div>
+          <div className="container" style={{textAlign: 'center'}}>
+          <small>On mobile devices, please turn to LANDSCAPE mode for the photos.</small>
+          </div>
           {/* Camera image */}
-          <div className="container">
+          <div className="container m-1"style={{textAlign: 'center', opacity: '1'}}>
               <Webcam
                 audio={false}
-                height={240}
+                height={336}
                 ref={this.setRef}
                 screenshotFormat="image/jpeg"
-                width={320}
+                width={448}
                 videoConstraints={videoConstraints}
-              className="rounded float-left" style={{border: '1px solid #6C757D'}}/>
-              <div className="button-container">
-              <span><button className="btn btn-secondary m-1" onClick={this.capture_one}>CAPTURE PHOTO 1</button></span>
-              <span><button className="btn btn-secondary m-1" onClick={this.capture_two}>CAPTURE PHOTO 2</button></span>
-              </div>
+                className="rounded " 
+                style={{border: '1px solid #6C757D'}}/>
+          </div>
+          
               {/* Show image one after it was created */}
               {this.state.imageData_one ?
-                <div>
-                  <p>
-                    <img src={this.state.imageData_one} alt="" className="mt-5" />
-                  </p>
+                <div className="container m-1" style={{textAlign: 'center'  , position: 'relative'}}>
+                    <img src={this.state.imageData_one} alt="" 
+                    className="rounded" style={{border: '1px solid #6C757D', opacity: '1'}} />
+                    <span className="badge badge-secondary" style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>PHOTO 1</span>
                   </div>
               : null}
-              {/* Show image two and input fields and submit button after second pic was created */}
+
+              {/* Show image two AND input fields and submit button after second pic was created */}
               {this.state.imageData_two ?
-                <div>
-                  <p>
-                    <img src={this.state.imageData_two} alt=""/>
-                  </p>
-          <form >
-                  <div className="form-row">
-          <div className="col-md-4 mb-3">
-          <label htmlFor="first_name">
-            FIRST NAME
+              <div style={{textAlign: 'center'}}>
+                <div className="container m-1" style={{textAlign: 'center'}}>
+                    <img src={this.state.imageData_two} alt=""
+                    className="rounded mt-1" style={{border: '1px solid #6C757D', opacity: '1'}}/>
+                    <span className="badge badge-secondary" style={{position: 'absolute', top: '116%', left: '50%', transform: 'translate(-50%, -50%)'}}>PHOTO 2</span>
+                </div>
+                <div className="container">
+              <form>
+              <h5 className="title mt-4">MORE ABOUT YOU.</h5>
+          <div className="form-group">
+          <label htmlFor="first_name">FIRST NAME</label>
             <input
             id="first_name"
               type="text"
@@ -240,9 +251,9 @@ export default class CustomerImage extends Component {
               className="form-control"
               required
             />
-          </label>
-          <label htmlFor="last_name">
-            LAST NAME
+          </div>
+          <div className="form-group">
+          <label htmlFor="last_name">LAST NAME</label>
             <input
             id="email"
               type="text"
@@ -252,9 +263,9 @@ export default class CustomerImage extends Component {
               className="form-control"
               required
             />
-          </label>
-          <label htmlFor="email">
-            EMAIL
+          </div>
+          <div className="form-group">
+          <label htmlFor="email">EMAIL</label>
             <input
             id="email"
               type="text"
@@ -264,29 +275,137 @@ export default class CustomerImage extends Component {
               className="form-control"
               required
             />
-          </label>
+          </div>
           <div className="form-group">
                   <div className="form-check">
                     <input className="form-check-input" type="checkbox" value="" id="invalidCheck2" required />
                     <label className="form-check-label" htmlFor="invalidCheck2">
-                    AGREE TO TERMS AND CONDITIONS
+                    AGREE TO <a href="https://www.termsfeed.com/blog/wp-content/uploads/2019/04/terms-and-conditions-template.pdf" target="_blank" rel="noopener noreferrer">TERMS AND CONDITIONS</a> 
                   </label>
                 </div>
                 </div>
                 {message && <p>{message}</p>} 
-          </div>
-          </div>
+          
            </form>      
-           <button className="btn btn-secondary" onClick={this.handleSaveSubmit} type="submit">SAVE</button>
+           </div>
+           <div className="container">
+           <button className="btn btn-secondary" onClick={this.handleSaveSubmit} type="submit">SAVE &amp; SEND</button>
           <p style={{fontFamily: 'Barlow, sans-serif'}}>Powered By {' '}
                       <img src={logo} width="80" height="80" alt="" className="d-inline-block pb-1"/>
                       </p>
            </div>
+           </div>
               : null}
-           
-          </div>
-          </div>
         </div>
+        </MediaQuery>
+        {/* View for mobile devices */}
+        <MediaQuery maxDeviceWidth={1023}>
+          <div className="jumbotron" style={{opacity: '0.9', backgroundColor: '#FFFFFF'}}>
+            <div className="container" style={{textAlign: 'center'}}>
+            <h2 className="title" style={{fontFamily: 'Permanent Marker, cursive'}}>DEAR CUSTOMER</h2>
+            <h5 className="title">WE NEED SOME MORE INFORMATION.</h5>
+            <h5 className="title">LET'S START WITH TWO PHOTOS.</h5>
+            </div>
+            <div className="container" style={{textAlign: 'center'}}>
+              <button className="btn btn-secondary m-1 ml-1" onClick={this.capture_one}>CAPTURE PHOTO 1</button>
+              <button className="btn btn-secondary m-1 ml-1" onClick={this.capture_two}>CAPTURE PHOTO 2</button>
+          </div>
+          {/* Camera image */}
+          <div className="container m-1" style={{textAlign: 'center', opacity: '1'}}>
+              <Webcam
+                audio={false}
+                height={144}
+                ref={this.setRef}
+                screenshotFormat="image/jpeg"
+                width={192}
+                videoConstraints={videoConstraints}
+                className="rounded " 
+                style={{border: '1px solid #6C757D', textAlign: 'center'}}/>
+          </div>
+          
+              {/* Show image one after it was created */}
+              {this.state.imageData_one ?
+                <div className="container m-1" style={{textAlign: 'center'  , position: 'relative'}}>
+                    <img src={this.state.imageData_one} alt="" 
+                    className="rounded" style={{border: '1px solid #6C757D', textAlign: 'center', opacity: '1'}} />
+                    {/* <span className="badge badge-secondary" style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>PHOTO 1</span> */}
+                  </div>
+              : null}
+
+              {/* Show image two AND input fields and submit button after second pic was created */}
+              {this.state.imageData_two ?
+              <div style={{textAlign: 'center'}}>
+                <div className="container m-1" style={{textAlign: 'center'}}>
+                    <img src={this.state.imageData_two} alt=""
+                    className="rounded mt-1" style={{border: '1px solid #6C757D', textAlign: 'center', opacity: '1'}}/>
+                    {/* <span className="badge badge-secondary" style={{position: 'absolute', top: '80%', left: '50%', transform: 'translate(-50%, -50%)'}}>PHOTO 2</span> */}
+                </div>
+                <div className="container">
+              <form>
+              <h5 className="title mt-4">MORE ABOUT YOU.</h5>
+          <div className="form-group">
+          <label htmlFor="first_name">FIRST NAME</label>
+            <input
+            id="first_name"
+              type="text"
+              name="first_name"
+              value={first_name}
+              onChange={this.handleInput}
+              className="form-control"
+              required
+            />
+          </div>
+          <div className="form-group">
+          <label htmlFor="last_name">LAST NAME</label>
+            <input
+            id="email"
+              type="text"
+              name="last_name"
+              value={last_name}
+              onChange={this.handleInput}
+              className="form-control"
+              required
+            />
+          </div>
+          <div className="form-group">
+          <label htmlFor="email">EMAIL</label>
+            <input
+            id="email"
+              type="text"
+              name="email"
+              value={email}
+              onChange={this.handleInput}
+              className="form-control"
+              required
+            />
+          </div>
+          <div className="form-group">
+                  <div className="form-check">
+                    <input className="form-check-input" type="checkbox" value="" id="invalidCheck2" required />
+                    <label className="form-check-label" htmlFor="invalidCheck2">
+                    AGREE TO <a href="https://www.termsfeed.com/blog/wp-content/uploads/2019/04/terms-and-conditions-template.pdf" target="_blank" rel="noopener noreferrer">TERMS AND CONDITIONS</a> 
+                  </label>
+                </div>
+                </div>
+                {message && <p>{message}</p>} 
+          
+           </form>      
+           </div>
+           <div className="container">
+           <button className="btn btn-secondary" onClick={this.handleSaveSubmit} type="submit">SAVE &amp; SEND</button>
+          <p style={{fontFamily: 'Barlow, sans-serif'}}>Powered By {' '}
+                      <img src={logo} width="80" height="80" alt="" className="d-inline-block pb-1"/>
+                      </p>
+           </div>
+           </div>
+              : null}
+        </div>
+        </MediaQuery>
+
+
+
+
+
         </div>
         <FooterCustomer />
         </div>

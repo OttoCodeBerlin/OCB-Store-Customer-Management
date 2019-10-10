@@ -3,9 +3,6 @@ import { Link } from 'react-router-dom'
 import logo from '../images/ocb_logo_200x200.png'
 import Navbar from './Navbar'
 import Footer from './Footer'
-         
-
-
 
 
 const Home = () => {

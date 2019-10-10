@@ -17,3 +17,13 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
 }
+
+.thumbnail:hover {
+  position: relative;
+  top: -25px;
+  left: -35px;
+  width: 100%;
+  height: auto;
+  display: block;
+  z-index: 999;
+}

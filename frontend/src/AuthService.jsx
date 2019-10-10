@@ -24,37 +24,37 @@ class AuthService {
       const { service } = this;
       const path = '/auth/add_customer';
       return service.post(path, body);
-    }
+  }
 
-    modify_customer = body => {
-      const { service } = this;
-      const path = '/auth/modify_customer';
-      return service.post(path, body);
-    }
+  modify_customer = body => {
+    const { service } = this;
+    const path = '/auth/modify_customer';
+    return service.post(path, body);
+  }
 
-    modify_customer_image_one = body => {
-      const { service } = this;
-      const path = '/auth/modify_customer_image_one';
-      return service.post(path, body);
-    }
+  modify_customer_image_one = body => {
+    const { service } = this;
+    const path = '/auth/modify_customer_image_one';
+    return service.post(path, body);
+  }
 
-    modify_customer_image_two = body => {
-      const { service } = this;
-      const path = '/auth/modify_customer_image_two';
-      return service.post(path, body);
-    }
+  modify_customer_image_two = body => {
+    const { service } = this;
+    const path = '/auth/modify_customer_image_two';
+    return service.post(path, body);
+  }
 
-    delete_customer = (body, id)=> {
-      const { service } = this;
-      const path = '/auth/delete_customer/'+id;
-      return service.post(path, body);
-    }
+  delete_customer = (body, id)=> {
+    const { service } = this;
+    const path = '/auth/delete_customer/'+id;
+    return service.post(path, body);
+  }
 
-    resend_customer = (body, id)=> {
-      const { service } = this;
-      const path = '/auth/resend_customer/'+id;
-      return service.post(path, body);
-    }
+  resend_customer = (body, id)=> {
+    const { service } = this;
+    const path = '/auth/resend_customer/'+id;
+    return service.post(path, body);
+  }
  
   edit = body => {
     const { service } = this;

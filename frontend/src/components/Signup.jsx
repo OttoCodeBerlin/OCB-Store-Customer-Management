@@ -12,6 +12,7 @@ export default class Signup extends Component {
     message: null
   }
 
+  //Input handler
   handleInput = ({ target: input }) => {
     const { name, value } = input;
 
@@ -20,6 +21,7 @@ export default class Signup extends Component {
     })
   }
 
+  //Submit handler with AuthService
   handleSubmit = e => {
     if (e) e.preventDefault()
 
@@ -33,13 +35,13 @@ export default class Signup extends Component {
       })
   }
 
+  //Call final submit
   submitForm = () => {
     this.handleSubmit()
   }
 
   render() {
     const { username, password, store_location, role, message } = this.state
-
     return (
       <div>
         <Navbar />
@@ -99,8 +101,7 @@ export default class Signup extends Component {
         </form>
 
         </div>
-       
-        
+      {/* Customer error message, if applicable */}
           {message && <p>{message}</p>}
         
           

@@ -10,6 +10,7 @@ const ThankYou = () => {
 <NavbarCustomer />
   <div className="container bg-2" >
       <div className="container" style={{ position: 'relative'}}>
+        {/* Large devices, desktop */}
         <MediaQuery minDeviceWidth={600}> 
         <div className="jumbotron" style={{ marginTop: '500px', position: 'absolute'}}>
             <h2 className="display-5" style={{fontFamily: 'Permanent Marker, cursive'}}>THANK YOU.</h2>
@@ -20,6 +21,7 @@ const ThankYou = () => {
             </p>
         </div>
         </MediaQuery>
+        {/* Small devices, mobile */}
         <MediaQuery maxDeviceWidth={599}> 
         <div className="jumbotron" style={{ marginTop: '80px', position: 'absolute'}}>
             <h2 className="display-5" style={{fontFamily: 'Permanent Marker, cursive'}}>THANK YOU.</h2>

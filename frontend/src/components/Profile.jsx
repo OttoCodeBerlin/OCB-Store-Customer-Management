@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import AuthService from '../AuthService'
+import ReactImageMagnify from 'react-image-magnify'
 import Navbar from './Navbar'
 import Footer from './Footer'
 import logo_sco from '../images/sustainable_fashion_o_logo.jpg'
@@ -183,12 +184,42 @@ export default class Profile extends Component {
 
         {customer.picture_one ?   //If customer pictures exist, show them with links to large view
          <td className="align-middle p-0"> 
-         <a href="/#" style={{cursor: 'pointer'}}  onClick={()=>{ window.open(customer.picture_one.image_data, "Popup","toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=1, resizable=0, width=700, height=500, top=30") }}>
-         <img src={customer.picture_one.image_data} style={{ height: '30%', width: 'auto', margin: '5px' }} alt=""/>
-         </a>
-         <a href="/#" style={{cursor: 'pointer'}}  onClick={()=>{ window.open(customer.picture_two.image_data, "Popup","toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=1, resizable=0, width=700, height=500, top=30") }}>
-         <img src={customer.picture_two.image_data} style={{ height: '30%', width: 'auto' , margin: '5px'  }} alt=""/>
-         </a>
+         <span>
+         <ReactImageMagnify {...{
+              smallImage: {
+                  alt: 'Customer Image One',
+                  width: 128,
+                  height: 96,
+                  src: customer.picture_one.image_data
+              },
+              largeImage: {
+                  src: customer.picture_one.image_data,
+                  width: 640,
+                  height: 480,
+                  enlargedImageContainerDimensions: {width: '200%', height: '200%'},
+                  enlargedImagePosition: 'over'
+              }
+          }} className="m-1"/>
+         {/* <a href={customer.picture_one.image_data} target="_blank" style={{cursor: 'pointer'}}  onClick={()=>{ window.open(customer.picture_one.image_data, "Popup","toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=1, resizable=0, width=700, height=500, top=30") }}> */}
+         {/* <img src={customer.picture_one.image_data} style={{ height: 'auto', width: '30%', margin: '5px' }} alt="" className="thumbnail"/> */}
+         <ReactImageMagnify {...{
+              smallImage: {
+                  alt: 'Customer Image Two',
+                  width: 128,
+                  height: 96,
+                  src: customer.picture_two.image_data
+              },
+              largeImage: {
+                  src: customer.picture_two.image_data,
+                  width: 640,
+                  height: 480,
+                  enlargedImageContainerDimensions: {width: '200%', height: '200%'},
+                  enlargedImagePosition: 'over'
+              }
+          }} className="m-1"/></span>
+         
+         {/* <a href={customer.picture_two.image_data} target="_blank" style={{cursor: 'pointer'}}  onClick={()=>{ window.open(customer.picture_two.image_data, "Popup","toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=1, resizable=0, width=700, height=500, top=30") }}> */}
+         {/* <img src={customer.picture_two.image_data} style={{ height: 'auto', width: '30%' , margin: '5px'  }} alt="" className="thumbnail"/> */}
          </td>
         : 
         <td className="align-middle p-0"><small style={{ color: 'red' }}>Customer Confirmation Pending</small></td>
