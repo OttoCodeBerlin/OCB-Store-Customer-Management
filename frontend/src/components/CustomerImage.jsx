@@ -5,22 +5,33 @@ import {storage} from '../firebase-config'
 import NavbarCustomer from './NavbarCustomer'
 import FooterCustomer from './FooterCustomer'
 import MediaQuery from 'react-responsive'
+import SimpleReactValidator from 'simple-react-validator'
 import logo from '../images/ocb_logo_200x200.png'
 
 export default class CustomerImage extends Component {
-  state = {
-    first_name: '',
-    last_name: '',
-    email: '',
-    picture_one: null,
-    picture_two: null,
-    customer_id: this.props.match.params.id,
-    message: null,
-    imageData_one: '',
-    imageData_two: '',
-    image_name: 'default',
-    saveImage: false,
+
+
+
+  constructor(props) {
+    super(props)
+  
+    this.state = {
+      first_name: '',
+      last_name: '',
+      email: '',
+      picture_one: null,
+      picture_two: null,
+      customer_id: this.props.match.params.id,
+      message: null,
+      imageData_one: '',
+      imageData_two: '',
+      image_name: 'default',
+      saveImage: false
+    }
+  
+    this.validator = new SimpleReactValidator()
   }
+  
 
   //Handle Customer data input
   handleInput = ({ target: input }) => {
@@ -105,6 +116,17 @@ export default class CustomerImage extends Component {
       .catch(({ response: { data } }) => {
         this.setState({ message: data.message })
       }), 1000)
+    }
+
+
+    //Call final submit
+    submitForm = (e) => {
+      if (this.validator.allValid()) {
+      this.handleSaveSubmit(e)
+      } else {
+        this.validator.showMessages()
+        this.forceUpdate()
+      }
     }
 
     //Upload image one
@@ -251,6 +273,7 @@ export default class CustomerImage extends Component {
               className="form-control"
               required
             />
+            {this.validator.message('first name', first_name, 'required|alpha')}
           </div>
           <div className="form-group">
           <label htmlFor="last_name">LAST NAME</label>
@@ -263,6 +286,7 @@ export default class CustomerImage extends Component {
               className="form-control"
               required
             />
+            {this.validator.message('last name', last_name, 'required|alpha')}
           </div>
           <div className="form-group">
           <label htmlFor="email">EMAIL</label>
@@ -275,12 +299,14 @@ export default class CustomerImage extends Component {
               className="form-control"
               required
             />
+            {this.validator.message('email address', email, 'required|email')}
           </div>
           <div className="form-group">
-                  <div className="form-check">
-                    <input className="form-check-input" type="checkbox" value="" id="invalidCheck2" required />
+          <div className="form-check">
+                    {/* <input className="form-check-input" type="checkbox" value={agreement} id="invalidCheck2" required />
+                    {this.validator.message('agreement', agreement, 'required|boolean')} */}
                     <label className="form-check-label" htmlFor="invalidCheck2">
-                    AGREE TO <a href="https://www.termsfeed.com/blog/wp-content/uploads/2019/04/terms-and-conditions-template.pdf" target="_blank" rel="noopener noreferrer">TERMS AND CONDITIONS</a> 
+                    BY SUBMITTING YOUR DATA YOU AGREE TO <a href="https://www.termsfeed.com/blog/wp-content/uploads/2019/04/terms-and-conditions-template.pdf" target="_blank" rel="noopener noreferrer">TERMS AND CONDITIONS</a> 
                   </label>
                 </div>
                 </div>
@@ -289,7 +315,7 @@ export default class CustomerImage extends Component {
            </form>      
            </div>
            <div className="container">
-           <button className="btn btn-secondary" onClick={this.handleSaveSubmit} type="submit">SAVE &amp; SEND</button>
+           <button className="btn btn-secondary" onClick={this.submitForm} type="submit">SAVE &amp; SEND</button>
           <p style={{fontFamily: 'Barlow, sans-serif'}}>Powered By {' '}
                       <img src={logo} width="80" height="80" alt="" className="d-inline-block pb-1"/>
                       </p>
@@ -309,6 +335,9 @@ export default class CustomerImage extends Component {
             <div className="container" style={{textAlign: 'center'}}>
               <button className="btn btn-secondary m-1 ml-1" onClick={this.capture_one}>CAPTURE PHOTO 1</button>
               <button className="btn btn-secondary m-1 ml-1" onClick={this.capture_two}>CAPTURE PHOTO 2</button>
+          </div>
+          <div className="container" style={{textAlign: 'center'}}>
+          <small>On mobile devices, please turn to LANDSCAPE mode for the photos.</small>
           </div>
           {/* Camera image */}
           <div className="container m-1" style={{textAlign: 'center', opacity: '1'}}>
@@ -354,6 +383,7 @@ export default class CustomerImage extends Component {
               className="form-control"
               required
             />
+            {this.validator.message('first name', first_name, 'required|alpha')}
           </div>
           <div className="form-group">
           <label htmlFor="last_name">LAST NAME</label>
@@ -366,6 +396,7 @@ export default class CustomerImage extends Component {
               className="form-control"
               required
             />
+            {this.validator.message('last name', last_name, 'required|alpha')}
           </div>
           <div className="form-group">
           <label htmlFor="email">EMAIL</label>
@@ -378,12 +409,14 @@ export default class CustomerImage extends Component {
               className="form-control"
               required
             />
+            {this.validator.message('email address', email, 'required|email')}
           </div>
           <div className="form-group">
                   <div className="form-check">
-                    <input className="form-check-input" type="checkbox" value="" id="invalidCheck2" required />
+                    {/* <input className="form-check-input" type="checkbox" value={agreement} id="invalidCheck2" required />
+                    {this.validator.message('agreement', agreement, 'required|boolean')} */}
                     <label className="form-check-label" htmlFor="invalidCheck2">
-                    AGREE TO <a href="https://www.termsfeed.com/blog/wp-content/uploads/2019/04/terms-and-conditions-template.pdf" target="_blank" rel="noopener noreferrer">TERMS AND CONDITIONS</a> 
+                    BY SUBMITTING YOUR DATA YOU AGREE TO <a href="https://www.termsfeed.com/blog/wp-content/uploads/2019/04/terms-and-conditions-template.pdf" target="_blank" rel="noopener noreferrer">TERMS AND CONDITIONS</a> 
                   </label>
                 </div>
                 </div>
@@ -392,7 +425,7 @@ export default class CustomerImage extends Component {
            </form>      
            </div>
            <div className="container">
-           <button className="btn btn-secondary" onClick={this.handleSaveSubmit} type="submit">SAVE &amp; SEND</button>
+           <button className="btn btn-secondary" onClick={this.submitForm} type="submit">SAVE &amp; SEND</button>
           <p style={{fontFamily: 'Barlow, sans-serif'}}>Powered By {' '}
                       <img src={logo} width="80" height="80" alt="" className="d-inline-block pb-1"/>
                       </p>

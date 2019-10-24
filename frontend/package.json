@@ -12,7 +12,8 @@
     "react-image-magnify": "^2.7.4",
     "react-responsive": "^8.0.1",
     "react-scripts": "3.1.2",
-    "react-webcam": "^3.1.1"
+    "react-webcam": "^3.1.1",
+    "simple-react-validator": "^1.2.4"
   },
   "scripts": {
     "start": " env-cmd -f ./development.env react-scripts start",

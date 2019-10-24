@@ -1,16 +1,29 @@
 import React, { Component } from 'react'
+import SimpleReactValidator from 'simple-react-validator'
 import AuthService from '../AuthService'
 import Navbar from './Navbar'
 import Footer from './Footer'
 
 export default class Signup extends Component {
-  state = {
-    username: '',
-    password: '',
-    store_location: '',
-    role: '',
-    message: null
+  
+
+
+  constructor(props) {
+    super(props)
+  
+    this.state = {
+      username: '',
+      password: '',
+      store_location: '',
+      role: '',
+      message: null
+    }
+  
+    this.validator = new SimpleReactValidator()
   }
+  
+  
+  
 
   //Input handler
   handleInput = ({ target: input }) => {
@@ -24,7 +37,6 @@ export default class Signup extends Component {
   //Submit handler with AuthService
   handleSubmit = e => {
     if (e) e.preventDefault()
-
     AuthService.signup(this.state)
       .then(({ data: user }) => {
         localStorage.setItem('userId', user._id)
@@ -37,7 +49,13 @@ export default class Signup extends Component {
 
   //Call final submit
   submitForm = () => {
+    if (this.validator.allValid()) {
+      alert('Thank you!')
     this.handleSubmit()
+    } else {
+      this.validator.showMessages()
+      this.forceUpdate()
+    }
   }
 
   render() {
@@ -59,6 +77,8 @@ export default class Signup extends Component {
               onChange={this.handleInput}
               className="form-control" id="username" 
                />
+               {this.validator.message('username', username, 'required|alpha')}
+ 
         </div>
         <div className="form-group vertical-center">
             <label htmlFor="password">Password</label>
@@ -69,6 +89,7 @@ export default class Signup extends Component {
               onChange={this.handleInput}
               className="form-control" id="password" 
                />
+               {this.validator.message('password', password, 'required|min:3')}
         </div>
         <div className="form-group vertical-center">
             <label htmlFor="store-location">Store Location</label>
@@ -83,6 +104,7 @@ export default class Signup extends Component {
               <option value='Buenos Aires, Argentina'>Buenos Aires, Argentina</option>
               <option value='La Habana, Cuba'>La Habana, Cuba</option>
             </select>
+            {this.validator.message('store location', store_location, 'required|alpha')}
 
 
         </div>
@@ -95,7 +117,7 @@ export default class Signup extends Component {
             <option value='Manager'>Manager</option>
             <option value='Admin'>Admin</option>
           </select>
-
+          {this.validator.message('role', role, 'required|string')}
         </div>
           <button  className="btn btn-secondary" onClick={this.submitForm}>Create Account</button>
         </form>
